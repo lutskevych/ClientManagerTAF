@@ -1,0 +1,102 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "array",
+  "title": "The Root Schema",
+  "items": {
+    "$id": "#/items",
+    "type": "object",
+    "title": "The Items Schema",
+    "required": [
+      "userUid",
+      "firstName",
+      "lastName",
+      "gender",
+      "age",
+      "email",
+      "dateOfBirth",
+      "fullName"
+    ],
+    "properties": {
+      "userUid": {
+        "$id": "#/items/properties/userUid",
+        "type": "string",
+        "title": "The Useruid Schema",
+        "default": "",
+        "examples": [
+          "feb220ab-bf42-4993-a7dc-af1299347920"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "firstName": {
+        "$id": "#/items/properties/firstName",
+        "type": "string",
+        "title": "The Firstname Schema",
+        "default": "",
+        "examples": [
+          "Joe"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "lastName": {
+        "$id": "#/items/properties/lastName",
+        "type": "string",
+        "title": "The Lastname Schema",
+        "default": "",
+        "examples": [
+          "Jones"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "gender": {
+        "$id": "#/items/properties/gender",
+        "type": "string",
+        "title": "The Gender Schema",
+        "default": "",
+        "examples": [
+          "MALE"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "age": {
+        "$id": "#/items/properties/age",
+        "type": "integer",
+        "title": "The Age Schema",
+        "default": 0,
+        "examples": [
+          22
+        ]
+      },
+      "email": {
+        "$id": "#/items/properties/email",
+        "type": "string",
+        "title": "The Email Schema",
+        "default": "",
+        "examples": [
+          "joe.jones@gmail.com"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "dateOfBirth": {
+        "$id": "#/items/properties/dateOfBirth",
+        "type": "integer",
+        "title": "The Dateofbirth Schema",
+        "default": 0,
+        "examples": [
+          1996
+        ]
+      },
+      "fullName": {
+        "$id": "#/items/properties/fullName",
+        "type": "string",
+        "title": "The Fullname Schema",
+        "default": "",
+        "examples": [
+          "Joe Jones"
+        ],
+        "pattern": "^(.*)$"
+      }
+    }
+  }
+}

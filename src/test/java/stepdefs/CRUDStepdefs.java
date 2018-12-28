@@ -1,4 +1,4 @@
-package com.shkulova.learningrestasured.stepdefs;
+package stepdefs;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;

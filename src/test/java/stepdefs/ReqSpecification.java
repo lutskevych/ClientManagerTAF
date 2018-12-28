@@ -1,4 +1,4 @@
-package com.shkulova.learningrestasured.stepdefs;
+package stepdefs;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;

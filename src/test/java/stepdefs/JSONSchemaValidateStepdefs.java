@@ -1,4 +1,4 @@
-package com.shkulova.learningrestasured.stepdefs;
+package stepdefs;
 
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;

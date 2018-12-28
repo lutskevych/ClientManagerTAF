@@ -9,6 +9,6 @@ import org.junit.runner.RunWith;
         glue = "stepdefs",
         features = {"classpath:feature"}
 )
-public class RunTests {
+public class RunTest {
 
 }

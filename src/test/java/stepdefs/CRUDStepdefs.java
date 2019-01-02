@@ -96,7 +96,7 @@ public class CRUDStepdefs {
                 .body("gender", equalTo("FEMALE"))
                 .body("age", equalTo(21))
                 .body("email", equalTo("joe.jones@gmail.com"))
-                .body("dateOfBirth", equalTo(1997))
+                .body("dateOfBirth", equalTo(1998))
                 .body("fullName", (equalTo("Anna Jones")));
     }
 

@@ -25,7 +25,7 @@ public class JSONSchemaValidateStepdefs {
         JsonSchemaFactory jsonSchemaFactory = buildJSONSchema();
         response.then()
                 .assertThat()
-                .body(matchesJsonSchemaInClasspath("schema.json").using(jsonSchemaFactory));
+                .body(matchesJsonSchemaInClasspath("usersSchema.json").using(jsonSchemaFactory));
     }
 
     private JsonSchemaFactory buildJSONSchema() {

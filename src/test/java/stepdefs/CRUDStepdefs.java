@@ -1,9 +1,12 @@
 package stepdefs;
 
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import data.User;
 import io.restassured.response.Response;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -11,61 +14,65 @@ public class CRUDStepdefs {
 
     private Response response;
 
-    @When("^administrator inserts user$")
-    public void administratorInsertsUser() {
-        response = given()
-                .spec(ReqSpecification.reqSpec)
-                .with()
-                .body("{\n" +
-                        "        \"userUid\":\"d22b8953-c87e-4729-afb8-fbce9d1dc9e4\" ,\n" +
-                        "            \"firstName\": \"Anna\",\n" +
-                        "            \"lastName\": \"Jones\",\n" +
-                        "            \"gender\": \"FEMALE\",\n" +
-                        "            \"age\": 21,\n" +
-                        "            \"email\": \"joe.jones@gmail.com\",\n" +
-                        "            \"dateOfBirth\": 1997,\n" +
-                        "            \"fullName\": \"Anna Jones\"\n" +
-                        "    }")
-                .when()
-                .post();
+    private World world;
+
+    public CRUDStepdefs(World world) {
+        this.world = world;
     }
 
-    @When("^administrator deletes user$")
-    public void administratorDeletesUser() {
-        response = given()
-                .spec(ReqSpecification.reqSpec)
-                .basePath("d22b8953-c87e-4729-afb8-fbce9d1dc9e4")
+    @After("@delete")
+    public void afterCRUScenario(){
+        given().spec(ReqSpecification.reqSpec)
+                .basePath(world.user.getUid())
                 .delete();
     }
 
-    @When("^administrator updates user$")
-    public void administratorUpdatesUser() {
+    @When("^administrator select gender users$")
+    public void administratorSelectUsers() {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .body("{\n" +
-                        "        \"userUid\":\"d22b8953-c87e-4729-afb8-fbce9d1dc9e4\" ,\n" +
-                        "            \"firstName\": \"Anna\",\n" +
-                        "            \"lastName\": \"Jones\",\n" +
-                        "            \"gender\": \"FEMALE\",\n" +
-                        "            \"age\": 23,\n" +
-                        "            \"email\": \"joe.jones@gmail.com\",\n" +
-                        "            \"dateOfBirth\": 1997,\n" +
-                        "            \"fullName\": \"Anna Jones\"\n" +
-                        "    }")
+                .queryParam("gender", world.user.getGender())
+                .get();
+        response.getBody().print();
+    }
+
+    @When("^administrator change last name on \"([^\"]*)\"$")
+    public void administratorChangeLastNameOn(String changedLastName) {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .with()
+                .body("{" +
+                        "\"userUid\":\"" + world.user.getUid() + "\",\n" +
+                        "\"firstName\":\"" + world.user.getFirstName() + "\",\n" +
+                        "\"lastName\":\"" + changedLastName + "\",\n" +
+                        "\"gender\":\"" + world.user.getGender() + "\",\n" +
+                        "\"age\":" + world.user.getAge() + ",\n" +
+                        "\"email\":\"" + world.user.getEmail() + "\",\n" +
+                        "\"dateOfBirth\":" + world.user.getDateOfBirth() + ",\n" +
+                        "\"fullName\":\"" + world.user.getFullName() + "\"\n" +
+                        "}")
+                .when()
                 .put();
     }
 
-    @When("^administrator select \"([a-zA-Z]+)\" users$")
-    public void administratorSelectUsers(String gender) {
+    @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([a-zA-Z]+)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
+    public void administratorInsertsUserWith(String uid, String firstName, String lastName,
+                                             String gender, int age, String email, String fullName) {
+        world.user = new User(uid, firstName, lastName, gender, age, email, fullName);
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .queryParam("gender", gender)
-                .get();
-    }
-
-    @Then("^user was inserted$")
-    public void userWasInserted() {
-        response.then().assertThat().statusCode(204);
+                .with()
+                .body("{" +
+                        "\"userUid\":\"" + uid + "\",\n" +
+                        "\"firstName\":\"" + firstName + "\",\n" +
+                        "\"lastName\":\"" + lastName + "\",\n" +
+                        "\"gender\":\"" + gender + "\",\n" +
+                        "\"age\":" + age + ",\n" +
+                        "\"email\":\"" + email + "\",\n" +
+                        "\"fullName\":\"" + fullName + "\"\n" +
+                        "}")
+                .when()
+                .post();
     }
 
     @Then("^user was updated$")
@@ -78,46 +85,59 @@ public class CRUDStepdefs {
         response.then().assertThat().statusCode(204);
     }
 
-    @Then("^response have only \"([a-zA-z]+)\" users$")
-    public void responseHaveOnlyUsers(String gender) {
+    @Then("^response have only gender users$")
+    public void responseHaveOnlyUsers() {
         response.then()
                 .assertThat()
-                .body("gender", contains(gender));
+                .body("gender", hasItem(world.user.getGender()));
+    }
+
+    @Then("^administrator deletes user$")
+    public void administratorDeletesUserWith() {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .basePath(world.user.getUid())
+                .delete();
+    }
+
+    @Then("^user was inserted$")
+    public void userWithWasInserted() {
+        response.then().assertThat().statusCode(204);
+        getResponse(world.user.getUid());
+        response.then().assertThat().statusCode(200);
     }
 
     @And("^record has correct data$")
-    public void recordHasCorrectData() {
-        getResponse();
+    public void recordWithHasCorrectData() {
+        getResponse(world.user.getUid());
         response.then()
                 .assertThat()
-                .body("userUid", equalTo("d22b8953-c87e-4729-afb8-fbce9d1dc9e4"))
-                .body("firstName", equalTo("Anna"))
-                .body("lastName", equalTo("Jones"))
-                .body("gender", equalTo("FEMALE"))
-                .body("age", equalTo(21))
-                .body("email", equalTo("joe.jones@gmail.com"))
-                .body("dateOfBirth", equalTo(1998))
-                .body("fullName", (equalTo("Anna Jones")));
+                .body("userUid", equalTo(world.user.getUid()))
+                .body("firstName", equalTo(world.user.getFirstName()))
+                .body("lastName", equalTo(world.user.getLastName()))
+                .body("age", equalTo(world.user.getAge()))
+                .body("email", equalTo(world.user.getEmail()))
+                .body("fullName", (equalTo(world.user.getFullName())));
     }
 
-    @And("^updated fields has correct data$")
-    public void updatedFieldsHasCorrectData() {
-        getResponse();
+    @And("^field with \"([^\"]*)\" has correct data$")
+    public void fieldWithForUserWithHasCorrectData(String changedLastName) {
+        getResponse(world.user.getUid());
         response.then()
                 .assertThat()
-                .body("age", equalTo(23));
+                .body("lastName", equalTo(changedLastName));
     }
 
-    @And("^correct record disappeared$")
-    public void correctRecordDisappeared() {
-        getResponse();
+    @And("^user was disappeared$")
+    public void userWasDisappeared() {
+        getResponse(world.user.getUid());
         response.then().assertThat().statusCode(404);
     }
 
-    private void getResponse() {
+    private void getResponse(String uid) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .basePath("d22b8953-c87e-4729-afb8-fbce9d1dc9e4")
+                .basePath(uid)
                 .get();
     }
 

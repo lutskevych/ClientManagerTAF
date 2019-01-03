@@ -67,7 +67,7 @@ public class CRUDStepdefs {
                         "\"firstName\":\"" + firstName + "\",\n" +
                         "\"lastName\":\"" + lastName + "\",\n" +
                         "\"gender\":\"" + gender + "\",\n" +
-                        "\"age\":" + age + 1 + ",\n" + //FIXME
+                        "\"age\":" + age + ",\n" +
                         "\"email\":\"" + email + "\",\n" +
                         "\"fullName\":\"" + fullName + "\"\n" +
                         "}")

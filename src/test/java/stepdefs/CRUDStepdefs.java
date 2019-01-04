@@ -1,5 +1,6 @@
 package stepdefs;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -33,7 +34,6 @@ public class CRUDStepdefs {
                 .spec(ReqSpecification.reqSpec)
                 .queryParam("gender", world.user.getGender())
                 .get();
-        response.getBody().print();
     }
 
     @When("^administrator change last name on \"([^\"]*)\"$")
@@ -41,16 +41,8 @@ public class CRUDStepdefs {
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .with()
-                .body("{" +
-                        "\"userUid\":\"" + world.user.getUid() + "\",\n" +
-                        "\"firstName\":\"" + world.user.getFirstName() + "\",\n" +
-                        "\"lastName\":\"" + changedLastName + "\",\n" +
-                        "\"gender\":\"" + world.user.getGender() + "\",\n" +
-                        "\"age\":" + world.user.getAge() + ",\n" +
-                        "\"email\":\"" + world.user.getEmail() + "\",\n" +
-                        "\"dateOfBirth\":" + world.user.getDateOfBirth() + ",\n" +
-                        "\"fullName\":\"" + world.user.getFullName() + "\"\n" +
-                        "}")
+                .body(getBody(world.user.getUid(), world.user.getFirstName(), changedLastName,
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
                 .when()
                 .put();
     }
@@ -62,17 +54,37 @@ public class CRUDStepdefs {
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .with()
-                .body("{" +
-                        "\"userUid\":\"" + uid + "\",\n" +
-                        "\"firstName\":\"" + firstName + "\",\n" +
-                        "\"lastName\":\"" + lastName + "\",\n" +
-                        "\"gender\":\"" + gender + "\",\n" +
-                        "\"age\":" + age + ",\n" +
-                        "\"email\":\"" + email + "\",\n" +
-                        "\"fullName\":\"" + fullName + "\"\n" +
-                        "}")
+                .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
                 .when()
                 .post();
+    }
+
+    @When("^administrator select user by uid$")
+    public void administratorSelectUserByUid() {
+        getResponse(world.user.getUid());
+    }
+
+    @When("^administrator updates gender field with \"([^\"]*)\"$")
+    public void administratorUpdatesGenderFieldWith(String incorrectGender) {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .with()
+                .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), incorrectGender,
+                        world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
+                .when()
+                .put();
+    }
+
+    @When("^administrator updates age field with \"([^\"]*)\"$")
+    public void administratorUpdatesAgeFieldWith(int incorrectAge) {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .with()
+                .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), world.user.getGender(),
+                        incorrectAge, world.user.getEmail(), world.user.getFullName()))
+                .when()
+                .put();
     }
 
     @Then("^user was updated$")
@@ -107,6 +119,20 @@ public class CRUDStepdefs {
         response.then().assertThat().statusCode(200);
     }
 
+    @Then("^response have only user with correct uid$")
+    public void responseHaveOnlyUserWithCorrectUid() {
+        response.then()
+                .assertThat()
+                .body("userUid", equalTo(world.user.getUid()));
+    }
+
+    @Then("^error message with \"([^\"]*)\" appears$")
+    public void errorMessageWithAppears(int statusCode) {
+        response.then()
+                .assertThat()
+                .statusCode(statusCode);
+    }
+
     @And("^record has correct data$")
     public void recordWithHasCorrectData() {
         getResponse(world.user.getUid());
@@ -128,8 +154,8 @@ public class CRUDStepdefs {
                 .body("lastName", equalTo(changedLastName));
     }
 
-    @And("^user was disappeared$")
-    public void userWasDisappeared() {
+    @And("^user does not exist$")
+    public void userDoesNotExist() {
         getResponse(world.user.getUid());
         response.then().assertThat().statusCode(404);
     }
@@ -139,6 +165,19 @@ public class CRUDStepdefs {
                 .spec(ReqSpecification.reqSpec)
                 .basePath(uid)
                 .get();
+    }
+
+    private String getBody(String uid, String firstName, String lastName,
+                           String gender, int age, String email, String fullName) {
+        return "{" +
+                "\"userUid\":\"" + uid + "\",\n" +
+                "\"firstName\":\"" + firstName + "\",\n" +
+                "\"lastName\":\"" + lastName + "\",\n" +
+                "\"gender\":\"" + gender + "\",\n" +
+                "\"age\":" + age + ",\n" +
+                "\"email\":\"" + email + "\",\n" +
+                "\"fullName\":\"" + fullName + "\"\n" +
+                "}";
     }
 
 }

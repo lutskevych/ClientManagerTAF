@@ -50,7 +50,7 @@ public class CRUDStepdefs {
     @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([a-zA-Z]+)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
     public void administratorInsertsUserWith(String uid, String firstName, String lastName,
                                              String gender, int age, String email, String fullName) {
-        world.user = new User(uid, firstName, lastName, gender, age+1, email, fullName);
+        world.user = new User(uid, firstName, lastName, gender, age, email, fullName);
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .with()

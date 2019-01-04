@@ -3,7 +3,8 @@ Feature: Administrator can insert, update and delete user
   @delete
   Scenario Outline: Administrator inserts user
     When administrator inserts user with "<Uid>", "<firstName>","<lastName>","<gender>","<age>","<email>","<fullName>"
-    Then user was inserted
+    Then changes are successful
+    And user appeared
     And record has correct data
     Examples:
       | Uid                                  | firstName | lastName | gender | age | email                   | fullName      |
@@ -40,7 +41,7 @@ Feature: Administrator can insert, update and delete user
   Scenario Outline: Administrator updates user
     Given administrator inserts user with "<Uid>", "<firstName>","<lastName>","<gender>","<age>","<email>","<fullName>"
     When administrator change last name on "<changedLastName>"
-    Then user was updated
+    Then changes are successful
     And field with "<changedLastName>" has correct data
     Examples:
       | Uid                                  | firstName | lastName | gender | age | email                   | fullName      | changedLastName |
@@ -52,7 +53,7 @@ Feature: Administrator can insert, update and delete user
   Scenario Outline: Administrator deletes user
     Given administrator inserts user with "<Uid>", "<firstName>","<lastName>","<gender>","<age>","<email>","<fullName>"
     When administrator deletes user
-    Then user was deleted
+    Then changes are successful
     And user does not exist
     Examples:
       | Uid                                  | firstName | lastName | gender | age | email                   | fullName      |

@@ -1,6 +1,5 @@
 package stepdefs;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -40,10 +39,8 @@ public class CRUDStepdefs {
     public void administratorChangeLastNameOn(String changedLastName) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .with()
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), changedLastName,
                         world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
-                .when()
                 .put();
     }
 
@@ -53,10 +50,8 @@ public class CRUDStepdefs {
         world.user = new User(uid, firstName, lastName, gender, age, email, fullName);
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .with()
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
                         world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
-                .when()
                 .post();
     }
 
@@ -69,10 +64,8 @@ public class CRUDStepdefs {
     public void administratorUpdatesGenderFieldWith(String incorrectGender) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .with()
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), incorrectGender,
                         world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
-                .when()
                 .put();
     }
 
@@ -80,27 +73,20 @@ public class CRUDStepdefs {
     public void administratorUpdatesAgeFieldWith(int incorrectAge) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .with()
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), world.user.getGender(),
                         incorrectAge, world.user.getEmail(), world.user.getFullName()))
-                .when()
                 .put();
     }
 
-    @Then("^user was updated$")
-    public void userWasUpdated() {
-        response.then().assertThat().statusCode(204);
-    }
-
-    @Then("^user was deleted$")
-    public void userWasDeleted() {
-        response.then().assertThat().statusCode(204);
+    @Then("^changes are successful$")
+    public void changesAreSuccsessful() {
+        response.then()
+                .statusCode(204);
     }
 
     @Then("^response have only gender users$")
     public void responseHaveOnlyUsers() {
         response.then()
-                .assertThat()
                 .body("gender", hasItem(world.user.getGender()));
     }
 
@@ -112,24 +98,15 @@ public class CRUDStepdefs {
                 .delete();
     }
 
-    @Then("^user was inserted$")
-    public void userWithWasInserted() {
-        response.then().assertThat().statusCode(204);
-        getResponse(world.user.getUid());
-        response.then().assertThat().statusCode(200);
-    }
-
     @Then("^response have only user with correct uid$")
     public void responseHaveOnlyUserWithCorrectUid() {
         response.then()
-                .assertThat()
                 .body("userUid", equalTo(world.user.getUid()));
     }
 
     @Then("^error message with \"([^\"]*)\" appears$")
     public void errorMessageWithAppears(int statusCode) {
         response.then()
-                .assertThat()
                 .statusCode(statusCode);
     }
 
@@ -137,7 +114,6 @@ public class CRUDStepdefs {
     public void recordWithHasCorrectData() {
         getResponse(world.user.getUid());
         response.then()
-                .assertThat()
                 .body("userUid", equalTo(world.user.getUid()))
                 .body("firstName", equalTo(world.user.getFirstName()))
                 .body("lastName", equalTo(world.user.getLastName()))
@@ -150,14 +126,21 @@ public class CRUDStepdefs {
     public void fieldWithForUserWithHasCorrectData(String changedLastName) {
         getResponse(world.user.getUid());
         response.then()
-                .assertThat()
                 .body("lastName", equalTo(changedLastName));
     }
 
     @And("^user does not exist$")
     public void userDoesNotExist() {
         getResponse(world.user.getUid());
-        response.then().assertThat().statusCode(404);
+        response.then()
+                .statusCode(404);
+    }
+
+    @And("^user appeared$")
+    public void userAppeared() {
+        getResponse(world.user.getUid());
+        response.then()
+                .statusCode(200);
     }
 
     private void getResponse(String uid) {

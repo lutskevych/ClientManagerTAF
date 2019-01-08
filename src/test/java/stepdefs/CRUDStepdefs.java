@@ -5,7 +5,9 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import data.User;
+import data.World;
 import io.restassured.response.Response;
+import spec.ReqSpecification;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -22,9 +24,11 @@ public class CRUDStepdefs {
 
     @After("@delete")
     public void afterCRUScenario(){
-        given().spec(ReqSpecification.reqSpec)
-                .basePath(world.user.getUid())
-                .delete();
+        if (!(world.user.getUid().isEmpty())) {
+            given().spec(ReqSpecification.reqSpec)
+                    .basePath(world.user.getUid())
+                    .delete();
+        }
     }
 
     @When("^administrator select gender users$")
@@ -40,18 +44,26 @@ public class CRUDStepdefs {
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), changedLastName,
-                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail()))
                 .put();
     }
 
-    @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([a-zA-Z]+)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
+    @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([a-zA-Z]+)\",\"([^\"]*)\",\"([^\"]*)\"$")
     public void administratorInsertsUserWith(String uid, String firstName, String lastName,
-                                             String gender, int age, String email, String fullName) {
-        world.user = new User(uid, firstName, lastName, gender, age, email, fullName);
+                                             String gender, int age, String email) {
+        world.user = User.newBuilder()
+                .setUid(uid)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setGender(gender)
+                .setAge(age)
+                .setEmail(email)
+//                .setFullName(fullName)
+                .build();
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
-                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail()))
                 .post();
     }
 
@@ -65,7 +77,7 @@ public class CRUDStepdefs {
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), incorrectGender,
-                        world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
+                        world.user.getAge(), world.user.getEmail()))
                 .put();
     }
 
@@ -74,7 +86,7 @@ public class CRUDStepdefs {
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(), world.user.getGender(),
-                        incorrectAge, world.user.getEmail(), world.user.getFullName()))
+                        incorrectAge, world.user.getEmail()))
                 .put();
     }
 
@@ -118,8 +130,7 @@ public class CRUDStepdefs {
                 .body("firstName", equalTo(world.user.getFirstName()))
                 .body("lastName", equalTo(world.user.getLastName()))
                 .body("age", equalTo(world.user.getAge()))
-                .body("email", equalTo(world.user.getEmail()))
-                .body("fullName", (equalTo(world.user.getFullName())));
+                .body("email", equalTo(world.user.getEmail()));
     }
 
     @And("^field with \"([^\"]*)\" has correct data$")
@@ -151,15 +162,14 @@ public class CRUDStepdefs {
     }
 
     private String getBody(String uid, String firstName, String lastName,
-                           String gender, int age, String email, String fullName) {
+                           String gender, int age, String email) {
         return "{" +
                 "\"userUid\":\"" + uid + "\",\n" +
                 "\"firstName\":\"" + firstName + "\",\n" +
                 "\"lastName\":\"" + lastName + "\",\n" +
                 "\"gender\":\"" + gender + "\",\n" +
                 "\"age\":" + age + ",\n" +
-                "\"email\":\"" + email + "\",\n" +
-                "\"fullName\":\"" + fullName + "\"\n" +
+                "\"email\":\"" + email + "\"\n" +
                 "}";
     }
 

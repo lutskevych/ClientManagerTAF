@@ -6,6 +6,8 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.restassured.response.Response;
+import spec.ReqSpecification;
+
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 

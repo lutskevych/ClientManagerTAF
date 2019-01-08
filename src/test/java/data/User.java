@@ -1,5 +1,8 @@
 package data;
 
+import lombok.Getter;
+
+@Getter
 public class User {
     private String uid;
     private String firstName;
@@ -10,77 +13,51 @@ public class User {
     private String fullName;
     private int dateOfBirth;
 
-    public User(String uid, String firstName, String lastName, String gender, int age, String email, String fullName) {
-        this.uid = uid;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.age = age;
-        this.email = email;
-        this.fullName = fullName;
+   private  User() {}
+
+   public static Builder newBuilder() {
+       return new User().new Builder();
+   }
+
+   public class Builder {
+       private Builder() {}
+
+       public Builder setUid(String uid) {
+           User.this.uid = uid;
+           return this;
+       }
+       public Builder setFirstName(String firstName) {
+           User.this.firstName = firstName;
+           return this;
+       }
+       public Builder setLastName(String lastName) {
+           User.this.lastName = lastName;
+           return this;
+       }
+       public Builder setGender(String gender) {
+           User.this.gender = gender;
+           return this;
+       }
+       public Builder setAge(int age) {
+           User.this.age = age;
+           return this;
+       }
+       public Builder setEmail(String email) {
+           User.this.email = email;
+           return this;
+       }
+       public Builder setFullName(String fullName) {
+           User.this.fullName = fullName;
+           return this;
+       }
+       public Builder setDateOfBirth(int dateOfBirth) {
+           User.this.dateOfBirth = dateOfBirth;
+           return this;
+       }
+
+       public User build() {
+           return User.this;
+       }
     }
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public int getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(int dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
 }

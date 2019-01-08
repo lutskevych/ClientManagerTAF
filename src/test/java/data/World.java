@@ -1,6 +1,4 @@
-package stepdefs;
-
-import data.User;
+package data;
 
 public class World {
     public User user;

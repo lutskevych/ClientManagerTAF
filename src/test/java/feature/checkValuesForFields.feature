@@ -1,3 +1,4 @@
+@ignored
 Feature: Administrator can not insert or update incorrect values
 
   @delete

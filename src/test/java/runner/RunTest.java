@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         glue = "stepdefs",
         features = {"src/test/java/feature"},
+        tags = {"~@ignored"},
         format = {
                 "pretty",
                 "html:target/cucumber-reports/cucumber-pretty",

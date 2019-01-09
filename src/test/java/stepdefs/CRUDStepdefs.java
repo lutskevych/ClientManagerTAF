@@ -6,11 +6,13 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import data.User;
 import data.World;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import spec.ReqSpecification;
 
 import java.time.LocalDate;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -28,8 +30,7 @@ public class CRUDStepdefs {
     public void afterCRUScenario(){
         if (!(world.user.getUid().isEmpty())) {
             given().spec(ReqSpecification.reqSpec)
-                    .basePath(world.user.getUid())
-                    .delete();
+                    .delete(world.user.getUid());
         }
     }
 
@@ -61,6 +62,7 @@ public class CRUDStepdefs {
                 .setAge(age)
                 .setEmail(email)
                 .build();
+
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
@@ -145,8 +147,7 @@ public class CRUDStepdefs {
     public void administratorDeletesUserWith() {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .basePath(world.user.getUid())
-                .delete();
+                .delete(world.user.getUid());
     }
 
     @Then("^response have only user with correct uid$")
@@ -231,8 +232,7 @@ public class CRUDStepdefs {
     private void getResponse(String uid) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .basePath(uid)
-                .get();
+                .get(uid);
     }
 
     private String getBody(String uid, String firstName, String lastName,
@@ -272,5 +272,4 @@ public class CRUDStepdefs {
                 "\"dateOfBirth\":\"" + dateOfBirth + "\"\n" +
                 "}";
     }
-
 }

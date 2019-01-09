@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         glue = "stepdefs",
-        features = {"classpath:feature"},
+        features = {"src/test/java/feature"},
         format = {
                 "pretty",
                 "html:target/cucumber-reports/cucumber-pretty",

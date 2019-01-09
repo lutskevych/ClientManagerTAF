@@ -53,11 +53,58 @@
             <version>1.18.4</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env>dev</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env>test</env>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+        <filters>
+            <filter>src/test/resources/config/envs/app.${env}.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/test/resources/config</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/test/resources/config/envs/app.${env}.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -95,7 +142,7 @@
                             <glue>
                                 <package>stepdefs</package>
                             </glue>
-                            <featuresDirectory>src/test/resources/feature/</featuresDirectory>
+                            <featuresDirectory>src/test/java/feature/</featuresDirectory>
                             <cucumberOutputDir>target/json-report</cucumberOutputDir>
                             <format>json</format>
                         </configuration>

@@ -6,9 +6,13 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import data.User;
 import data.World;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import spec.ReqSpecification;
 
+import java.time.LocalDate;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -26,8 +30,7 @@ public class CRUDStepdefs {
     public void afterCRUScenario(){
         if (!(world.user.getUid().isEmpty())) {
             given().spec(ReqSpecification.reqSpec)
-                    .basePath(world.user.getUid())
-                    .delete();
+                    .delete(world.user.getUid());
         }
     }
 
@@ -49,7 +52,7 @@ public class CRUDStepdefs {
     }
 
     @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([a-zA-Z]+)\",\"([^\"]*)\",\"([^\"]*)\"$")
-    public void administratorInsertsUserWith(String uid, String firstName, String lastName,
+    public void administratorInsertsUserWithAllRequestedFields(String uid, String firstName, String lastName,
                                              String gender, int age, String email) {
         world.user = User.newBuilder()
                 .setUid(uid)
@@ -58,8 +61,8 @@ public class CRUDStepdefs {
                 .setGender(gender)
                 .setAge(age)
                 .setEmail(email)
-//                .setFullName(fullName)
                 .build();
+
         response = given()
                 .spec(ReqSpecification.reqSpec)
                 .body(getBody(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
@@ -90,6 +93,44 @@ public class CRUDStepdefs {
                 .put();
     }
 
+    @When("^administrator inserts user with \"([^\"]*)\" \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
+    public void administratorInsertsUserWithFullName(String incorrectFullName, String uid, String firstName, String lastName,
+                                             String gender, int age, String email) {
+        world.user = User.newBuilder()
+                .setUid(uid)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setGender(gender)
+                .setAge(age)
+                .setEmail(email)
+                .setFullName(incorrectFullName)
+                .build();
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .body(getBodyWithFullName(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getFullName()))
+                .post();
+    }
+
+    @When("^administrator inserts user with \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\", \"([^\"]*)\"$")
+    public void administratorInsertsUserWithDateOfBirth(String uid, String firstName, String lastName,
+                                             String gender, int age, String email,int incorrectDateOfBirth) {
+        world.user = User.newBuilder()
+                .setUid(uid)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setGender(gender)
+                .setAge(age)
+                .setEmail(email)
+                .setDateOfBirth(incorrectDateOfBirth)
+                .build();
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .body(getBodyWithDateOfBirth(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), world.user.getDateOfBirth()))
+                .post();
+    }
+
     @Then("^changes are successful$")
     public void changesAreSuccsessful() {
         response.then()
@@ -106,8 +147,7 @@ public class CRUDStepdefs {
     public void administratorDeletesUserWith() {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .basePath(world.user.getUid())
-                .delete();
+                .delete(world.user.getUid());
     }
 
     @Then("^response have only user with correct uid$")
@@ -122,6 +162,39 @@ public class CRUDStepdefs {
                 .statusCode(statusCode);
     }
 
+    @Then("^user appeared with correct full name$")
+    public void userAppearedWithCorrectFullName() {
+        getResponse(world.user.getUid());
+        response.then()
+                .body("fullName", equalTo(world.user.getFirstName() + " " + world.user.getLastName()));
+    }
+
+    @Then("^administrator updates full name field with \"([^\"]*)\"$")
+    public void administratorUpdatesFullNameFieldWith(String incorrectFullName) {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .body(getBodyWithFullName(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), incorrectFullName))
+                .put();
+    }
+
+    @Then("^administrator updates date of birth field with \"([^\"]*)\"$")
+    public void administratorUpdatesDateOfBirthFieldWith(int incorrectDateOfBirth) {
+        response = given()
+                .spec(ReqSpecification.reqSpec)
+                .body(getBodyWithDateOfBirth(world.user.getUid(), world.user.getFirstName(), world.user.getLastName(),
+                        world.user.getGender(), world.user.getAge(), world.user.getEmail(), incorrectDateOfBirth))
+                .put();
+    }
+
+
+    @Then("^user appeared with correct date of birth$")
+    public void userAppearedWithCorrectDateOfBirth() {
+        getResponse(world.user.getUid());
+        response.then()
+                .body("dateOfBirth", equalTo(LocalDate.now().minusYears(world.user.getAge()).getYear()));
+    }
+
     @And("^record has correct data$")
     public void recordWithHasCorrectData() {
         getResponse(world.user.getUid());
@@ -130,7 +203,9 @@ public class CRUDStepdefs {
                 .body("firstName", equalTo(world.user.getFirstName()))
                 .body("lastName", equalTo(world.user.getLastName()))
                 .body("age", equalTo(world.user.getAge()))
-                .body("email", equalTo(world.user.getEmail()));
+                .body("email", equalTo(world.user.getEmail()))
+                .body("fullName", equalTo(world.user.getFirstName() + " " + world.user.getLastName()))
+                .body("dateOfBirth", equalTo(LocalDate.now().minusYears(world.user.getAge()).getYear()));
     }
 
     @And("^field with \"([^\"]*)\" has correct data$")
@@ -157,8 +232,7 @@ public class CRUDStepdefs {
     private void getResponse(String uid) {
         response = given()
                 .spec(ReqSpecification.reqSpec)
-                .basePath(uid)
-                .get();
+                .get(uid);
     }
 
     private String getBody(String uid, String firstName, String lastName,
@@ -173,4 +247,29 @@ public class CRUDStepdefs {
                 "}";
     }
 
+    private String getBodyWithFullName(String uid, String firstName, String lastName,
+                           String gender, int age, String email, String fullName) {
+        return "{" +
+                "\"userUid\":\"" + uid + "\",\n" +
+                "\"firstName\":\"" + firstName + "\",\n" +
+                "\"lastName\":\"" + lastName + "\",\n" +
+                "\"gender\":\"" + gender + "\",\n" +
+                "\"age\":" + age + ",\n" +
+                "\"email\":\"" + email + "\",\n" +
+                "\"fullName\":\"" + fullName + "\"\n" +
+                "}";
+    }
+
+    private String getBodyWithDateOfBirth(String uid, String firstName, String lastName,
+                                       String gender, int age, String email, int dateOfBirth) {
+        return "{" +
+                "\"userUid\":\"" + uid + "\",\n" +
+                "\"firstName\":\"" + firstName + "\",\n" +
+                "\"lastName\":\"" + lastName + "\",\n" +
+                "\"gender\":\"" + gender + "\",\n" +
+                "\"age\":" + age + ",\n" +
+                "\"email\":\"" + email + "\",\n" +
+                "\"dateOfBirth\":\"" + dateOfBirth + "\"\n" +
+                "}";
+    }
 }

@@ -21,7 +21,7 @@ Feature: Administrator can insert, update and delete user
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          |
 
-  @delete @ignored
+  @delete
   Scenario Outline: Administrator filters users by Uid
     Given administrator inserts user with "<Uid>", "<firstName>","<lastName>","<gender>","<age>","<email>"
     When administrator select user by uid

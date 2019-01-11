@@ -48,7 +48,7 @@ Feature: Administrator can insert, update and delete user
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com | Ivanova         |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          | Ivanov          |
       | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com | Ivanova         |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          | Ivanov          |
+      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | -2  | m.sm@gmail.com          | Ivanov          |
 
   @delete
   Scenario Outline: Administrator deletes user

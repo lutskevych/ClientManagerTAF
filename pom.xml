@@ -77,8 +77,19 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                        <configuration>
+                            <testFailureIgnore>true</testFailureIgnore>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                    <!--<testFailureIgnore>true</testFailureIgnore>-->
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.temyers</groupId>
@@ -96,8 +107,13 @@
                                 <package>stepdefs</package>
                             </glue>
                             <featuresDirectory>src/test/resources/feature/</featuresDirectory>
-                            <cucumberOutputDir>target/json-report</cucumberOutputDir>
+                            <cucumberOutputDir>target/parallel-json-report</cucumberOutputDir>
                             <format>json</format>
+                            <tags>
+                                <tag>~@ignore</tag>
+                            </tags>
+                            <namingPattern>ParallelTest*IT</namingPattern>
+                            <parallelScheme>SCENARIO</parallelScheme>
                         </configuration>
                     </execution>
                 </executions>
@@ -116,7 +132,7 @@
                         <configuration>
                             <projectName>cucumber-report</projectName>
                             <outputDirectory>target</outputDirectory>
-                            <inputDirectory>target/json-report</inputDirectory>
+                            <inputDirectory>target/parallel-json-report</inputDirectory>
                             <jsonFiles>
                                 <param>**/*.json</param>
                             </jsonFiles>

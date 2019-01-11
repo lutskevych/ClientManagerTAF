@@ -10,8 +10,6 @@ Feature: Administrator can insert, update and delete user
       | Uid                                  | firstName | lastName | gender | age | email                   |
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          |
 
   @delete
   Scenario Outline: Administrator filters user by gender
@@ -22,8 +20,6 @@ Feature: Administrator can insert, update and delete user
       | Uid                                  | firstName | lastName | gender | age | email                   |
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          |
 
   @delete
   Scenario Outline: Administrator filters users by Uid
@@ -34,8 +30,6 @@ Feature: Administrator can insert, update and delete user
       | Uid                                  | firstName | lastName | gender | age | email                   |
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          |
 
   @delete
   Scenario Outline: Administrator updates user
@@ -47,8 +41,6 @@ Feature: Administrator can insert, update and delete user
       | Uid                                  | firstName | lastName | gender | age | email                   | changedLastName |
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com | Ivanova         |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          | Ivanov          |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com | Ivanova         |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          | Ivanov          |
 
   @delete
   Scenario Outline: Administrator deletes user
@@ -60,5 +52,3 @@ Feature: Administrator can insert, update and delete user
       | Uid                                  | firstName | lastName | gender | age | email                   |
       | 125d1a3f-baaa-4b9b-b60c-991469e40233 | Anna      | Shkulova | FEMALE | 21  | anna.shkulova@gmail.com |
       | 125d1a3f-baaa-4b9b-b60c-991469e40234 | John      | Smith    | MALE   | 30  | j.sm@gmail.com          |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40235 | Nina      | Shkulova | FEMALE | 22  | nina.shkulova@gmail.com |
-      | 125d1a3f-baaa-4b9b-b60c-991469e40236 | Mike      | Smith    | MALE   | 31  | m.sm@gmail.com          |

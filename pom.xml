@@ -113,7 +113,7 @@
                                 <tag>~@ignore</tag>
                             </tags>
                             <namingPattern>ParallelTest*IT</namingPattern>
-                            <parallelScheme>SCENARIO</parallelScheme>
+                            <parallelScheme>FEATURE</parallelScheme>
                         </configuration>
                     </execution>
                 </executions>

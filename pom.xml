@@ -112,8 +112,8 @@
                             <tags>
                                 <tag>~@ignore</tag>
                             </tags>
-                            <namingPattern>ParallelTest*IT</namingPattern>
-                            <parallelScheme>FEATURE</parallelScheme>
+                            <!--<namingPattern>ParallelTest*IT</namingPattern>-->
+                            <!--<parallelScheme>FEATURE</parallelScheme>-->
                         </configuration>
                     </execution>
                 </executions>
